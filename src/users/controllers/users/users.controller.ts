@@ -78,4 +78,11 @@ export class UsersController {
   }
 
 
+  // Remove role from user
+
+  @Post('/remove/:userId/:roleId')
+  removeRoleFromUser(@Param('userId') userId: number, @Param('roleId') roleId: number): Promise<any> {
+    return this.userService.removeRoleFromUser(userId, roleId);
+  }
+
 }

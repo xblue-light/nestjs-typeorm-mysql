@@ -84,7 +84,7 @@ export class UsersService {
   // Add a role to a user, if user exists and role should exist.
   async addRoleToUser(userId: number, roleId: number) {
     const user = await this.userRepository.findOneBy({ id: userId });
-    console.log(JSON.stringify(user));
+    //console.log(JSON.stringify(user));
 
     if (!user) {
       throw new HttpException(
@@ -94,7 +94,7 @@ export class UsersService {
     }
 
     const role = await this.roleRepository.findOneBy({ id: roleId });
-    console.log(JSON.stringify(role));
+    //console.log(JSON.stringify(role));
     // TODO: check for role?
 
     const userRole = new UserRole();
@@ -105,6 +105,26 @@ export class UsersService {
     console.log(JSON.stringify(userRole))
     return this.userRoleRepository.save(userRole);
 
+  }
+
+  // Delete role from user
+  async removeRoleFromUser(userId: number, roleId: number): Promise<any> {
+    const userRole = await this.userRoleRepository
+      .createQueryBuilder()
+      .where('userId = :userId', { userId })
+      .andWhere('roleId = :roleId', { roleId })
+      .getOne();
+
+    // Returns an array of elements found 
+    // const userRole = await this.userRoleRepository
+    // .createQueryBuilder()
+    // .where('userId = :userId', { userId })
+    // .andWhere('roleId = :roleId', { roleId })
+    // .getMany();
+
+    console.log(JSON.stringify(userRole, null, 4))
+      // return;
+    return await this.userRoleRepository.delete(userRole);
   }
 
   // TODO: Extract to role service
