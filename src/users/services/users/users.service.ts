@@ -1,5 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from 'src/typeorm/entities/Role';
+import { UserRole } from 'src/typeorm/entities/UserRole';
 import { Repository } from 'typeorm';
 import { Post } from '../../../typeorm/entities/Post';
 import { Profile } from '../../../typeorm/entities/Profile';
@@ -8,15 +10,18 @@ import {
   CreateUserParams,
   CreateUserPostParams,
   CreateUserProfileParams,
+  RoleDetailsParams,
   UpdateUserParams,
 } from '../../../utils/types';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Profile) private profileRepository: Repository<Profile>,
-    @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>,
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+    @InjectRepository(UserRole) private readonly userRoleRepository: Repository<UserRole>
   ) {}
 
   findUsers() {
@@ -74,4 +79,39 @@ export class UsersService {
     });
     return this.postRepository.save(newUserPost);
   }
+
+
+  // Add a role to a user, if user exists and role should exist.
+  async addRoleToUser(userId: number, roleId: number) {
+    const user = await this.userRepository.findOneBy({ id: userId });
+    console.log(JSON.stringify(user));
+
+    if (!user) {
+      throw new HttpException(
+        'User not found. Cannot add role.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const role = await this.roleRepository.findOneBy({ id: roleId });
+    console.log(JSON.stringify(role));
+    // TODO: check for role?
+
+    const userRole = new UserRole();
+
+    userRole.user = user;
+    userRole.role = role;
+
+    console.log(JSON.stringify(userRole))
+    return this.userRoleRepository.save(userRole);
+
+  }
+
+  // TODO: Extract to role service
+  async addRole(roleDetails: RoleDetailsParams) {
+    return this.roleRepository.save(roleDetails);
+  }
+
+
+
 }

@@ -2,12 +2,14 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Post } from './Post';
 import { Profile } from './Profile';
+import { Role } from './Role';
 
 @Entity({ name: 'users' })
 export class User {
@@ -32,4 +34,7 @@ export class User {
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
+
+  @ManyToMany(() => Role, role => role.users)
+  roles: Role[];
 }

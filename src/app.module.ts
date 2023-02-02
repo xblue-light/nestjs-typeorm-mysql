@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import { AuthorsModule } from './authors/authors.module';
 import { Author } from './typeorm/entities/Author';
 import { Book } from './typeorm/entities/Book';
+import { UserRole } from './typeorm/entities/UserRole';
+import { Role } from './typeorm/entities/Role';
 
 @Module({
   imports: [
@@ -20,7 +22,7 @@ import { Book } from './typeorm/entities/Book';
       username: `${process.env.MYSQL_USERNAME}`,
       password: `${process.env.MYSQL_PASSWORD}`,
       database: `${process.env.MYSQL_DATABASE}`,
-      entities: [User, Profile, Post, Author, Book],
+      entities: [User, Profile, Post, Author, Book, Role, UserRole],
       synchronize: true,
     }),
     UsersModule,

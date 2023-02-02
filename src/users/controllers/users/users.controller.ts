@@ -8,6 +8,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
+import { UserRole } from 'src/typeorm/entities/UserRole';
+import { CreateUserRoleDto } from 'src/users/dtos/CreateUserRole.dto';
 import { CreateUserDto } from '../../dtos/CreateUser.dto';
 import { CreateUserPostDto } from '../../dtos/CreateUserPost.dto';
 import { CreateUserProfileDto } from '../../dtos/CreateUserProfile.dto';
@@ -55,4 +57,25 @@ export class UsersController {
   ) {
     return this.userService.createUserPost(id, createUserPostDto);
   }
+
+
+  // Add a new role to the roles table
+  // TODO: need to extract to role controller
+
+  @Post('/addRole')
+  createUserRole(@Body() createUserRoleDto: CreateUserRoleDto) {
+
+    return this.userService.addRole(createUserRoleDto);
+    
+  }
+
+
+  // addRoleToUser
+
+  @Post('/add/:userId/:roleId')
+  async addRoleToUser(@Param('userId') userId: number, @Param('roleId') roleId: number): Promise<UserRole> {
+    return this.userService.addRoleToUser(userId, roleId);
+  }
+
+
 }

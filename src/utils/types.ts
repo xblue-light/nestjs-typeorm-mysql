@@ -32,3 +32,9 @@ export type AuthorDetails = {
 export type UpdateAuthorDetails = {
   name: string;
 }
+
+
+export type RoleDetailsParams = {
+  name: string;
+  description: string;
+}
