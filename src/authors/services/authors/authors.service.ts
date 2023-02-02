@@ -27,8 +27,8 @@ export class AuthorsService {
     }
 
     // Update author by ID
-    updateAuthor(id: number, updateAuthorDetails: UpdateAuthorDetails) {
-        return this.authorRepository.update({id}, {...updateAuthorDetails});
+    async updateAuthor(id: number, updateAuthorDetails: UpdateAuthorDetails) {
+        return await this.authorRepository.update({id}, {...updateAuthorDetails});
     }
 
     // Delete authors books and then the author.
